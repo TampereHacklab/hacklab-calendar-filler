@@ -78,17 +78,17 @@ def get_csv(args):
    output = io.StringIO()
    # fields required by google https://support.google.com/calendar/answer/37118?hl=en#
    fieldnames = ['Subject', 'Start Date', 'Start Time', 'End Date', 'End Time', 'All Day Event', 'Description', 'Location', 'Private']
-   writer = csv.DictWriter(output, fieldnames=fieldnames)
+   writer = csv.DictWriter(output, fieldnames=fieldnames, lineterminator='\n')
 
    # start from startdate or today
-   day = args.startdate if args.startdate else dt.date.today()
+   day = args["startdate"] if args["startdate"] else dt.date.today()
 
    writer.writeheader()
-   with open(args.inputfile) as f:
+   with open(args["inputfile"]) as f:
       line = f.readline()
       while line:
          subject = line.strip()
-         day = get_next_valid_thursday(day, args.skiprange)
+         day = get_next_valid_thursday(day, args["skiprange"])
          fmt = "%m/%d/%Y"
 
          writer.writerow({
@@ -111,7 +111,7 @@ def get_csv(args):
 def main(argv):
    parser = get_parser()
    args = parser.parse_args()
-   print(get_csv(args), end='')
+   print(get_csv(vars(args)), end='')
 
 if __name__ == "__main__":
    main(sys.argv[1:])
