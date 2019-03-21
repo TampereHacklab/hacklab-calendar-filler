@@ -22,6 +22,20 @@ You can then modify the csv file (for example write some nice descriptions for t
 
 Optionally you can add -s parameter for setting the first day of calculation (defaults to today)
 
+You can also define skipranges to keep for example christmas and summer out from valid days. Skiprange can have multiple ranges and also handles one day ranges, for example:
+
+```
+--skiprange 2019/04/11 2019/06/01-2019/07/31
+```
+
+# Somewhat universal command example
+
+Check the start day (-s parameter) from the current calendar (the last workshop defined currently). And add skiprange for summer and christmas / new year.
+
+```
+python gencsvfile.py workshoplist.txt -s 2019/04/05 --skiprange `date +%Y`/06/01-`date +%Y`/07/31 `date +%Y`/12/23-`date +%Y -d 'next year'`/01/6| tee import_to_google_calendar.csv
+```
+
 # TODO:
 
 * use the calendar api
