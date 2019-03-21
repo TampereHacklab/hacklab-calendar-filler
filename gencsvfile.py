@@ -10,6 +10,7 @@ import csv
 import datetime as dt
 import dateutil.relativedelta as rd
 import dateutil.parser
+from datestuff import DateRange
 
 # helper method for getting the next weeks thursday
 def get_next_thursday(day):
@@ -19,10 +20,51 @@ def get_next_thursday(day):
    day = day + delta
    return day
 
+# validate day (for now checks for just the skipranges), TODO: add holidays
+# returns true if day is valid and false if day is not valid
+def valid_date(day, skipranges):
+   valid = True
+   # check the skipranges
+
+   for sr in skipranges:
+      if day in sr:
+         valid = False
+
+   # TODO: other checks
+
+   return valid
+
+# get the next valid thursday
+def get_next_valid_thursday(day, skipranges):
+   day = get_next_thursday(day)
+   while not valid_date(day, skipranges):
+      day = get_next_thursday(day)
+   return day
+
+# parse skiprange parameter to DateRange
+def parse_skiprange(s):
+   try:
+      start, end = s.split('-')
+   except ValueError:
+      # handle one day as a range of one day
+      start = s
+      end = s
+
+   try:
+      startdate = dateutil.parser.parse(start)
+      # important to add one day to end date, the check is still time specific and this way
+      # we will check from 2019-01-01 00:00 to 2019-01-02 00:00
+      enddate = dateutil.parser.parse(end) + dt.timedelta(days=1)
+      return DateRange(start=startdate, stop=enddate, step=dt.timedelta(hours=1))
+   except ValueError:
+      msg = "Not a valid date range: '{0}'.".format(s)
+      raise argparse.ArgumentTypeError(msg)
+
 def main(argv):
    parser = argparse.ArgumentParser(description='txt file to csv format for google calendar import')
    parser.add_argument("inputfile")
    parser.add_argument("-s", "--startdate", help="start from future date instead of next week thursday. format: YYYY/MM/DD (and whatever dateutil.parser.parse feeds on)", type=dateutil.parser.parse)
+   parser.add_argument("--skiprange", help="skipranges for dates. something like 2019/06/01-2019/07/30 can be set multiple times. if only one day is given only that day is skipped", nargs='*', type=parse_skiprange)
    args = parser.parse_args()
 
    # fields required by google https://support.google.com/calendar/answer/37118?hl=en#
@@ -37,8 +79,9 @@ def main(argv):
       line = f.readline()
       while line:
          subject = line.strip()
-         day = get_next_thursday(day)
+         day = get_next_valid_thursday(day, args.skiprange)
          fmt = "%m/%d/%Y"
+
          writer.writerow({
             'Subject': subject,
             'Start Date': day.strftime(fmt),
