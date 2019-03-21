@@ -28,7 +28,7 @@ You can also define skipranges to keep for example christmas and summer out from
 --skiprange 2019/04/11 2019/06/01-2019/07/31
 ```
 
-# Somewhat univeral command example
+# Somewhat universal command example
 
 Check the start day (-s parameter) from the current calendar (the last workshop defined currently). And add skiprange for summer and christmas / new year.
 
