@@ -9,6 +9,7 @@ import argparse
 import csv
 import datetime as dt
 import dateutil.relativedelta as rd
+import dateutil.parser
 
 # helper method for getting the next weeks thursday
 def get_next_thursday(day):
@@ -18,21 +19,20 @@ def get_next_thursday(day):
    day = day + delta
    return day
 
-
 def main(argv):
    parser = argparse.ArgumentParser(description='txt file to csv format for google calendar import')
    parser.add_argument("inputfile")
+   parser.add_argument("-s", "--startdate", help="start from future date instead of next week thursday. format: YYYY/MM/DD (and whatever dateutil.parser.parse feeds on)", type=dateutil.parser.parse)
    args = parser.parse_args()
 
    # fields required by google https://support.google.com/calendar/answer/37118?hl=en#
    fieldnames = ['Subject', 'Start Date', 'Start Time', 'End Date', 'End Time', 'All Day Event', 'Description', 'Location', 'Private']
    writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
 
+   # start from startdate or today
+   day = args.startdate if args.startdate else dt.date.today()
+
    writer.writeheader()
-
-   # start from today
-   day = dt.date.today()
-
    with open(args.inputfile) as f:
       line = f.readline()
       while line:

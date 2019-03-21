@@ -19,3 +19,11 @@ Fusion 360
 ```
 
 You can then modify the csv file (for example write some nice descriptions for the events) and then import to google calendar https://support.google.com/calendar/answer/37118?hl=en
+
+Optionally you can add -s parameter for setting the first day of calculation (defaults to today)
+
+# TODO:
+
+* use the calendar api
+* check that the day is "empty" and skip if it is
+* check that the day is not a holiday and skip if it is
