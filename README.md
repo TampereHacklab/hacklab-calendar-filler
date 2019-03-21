@@ -41,3 +41,11 @@ python gencsvfile.py workshoplist.txt -s 2019/04/05 --skiprange `date +%Y`/06/01
 * use the calendar api
 * check that the day is "empty" and skip if it is
 * check that the day is not a holiday and skip if it is
+
+# Testing:
+
+There is a simple unittest included that checks for most of the stuff
+
+```
+python test_gencsvfile.py
+```
