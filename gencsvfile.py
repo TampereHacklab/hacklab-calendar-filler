@@ -11,6 +11,7 @@ import datetime as dt
 import dateutil.relativedelta as rd
 import dateutil.parser
 from datestuff import DateRange
+import io
 
 # helper method for getting the next weeks thursday
 def get_next_thursday(day):
@@ -60,16 +61,24 @@ def parse_skiprange(s):
       msg = "Not a valid date range: '{0}'.".format(s)
       raise argparse.ArgumentTypeError(msg)
 
-def main(argv):
+def get_parser():
+   """
+   Define the input arguments and returns the parser for them
+   """
    parser = argparse.ArgumentParser(description='txt file to csv format for google calendar import')
    parser.add_argument("inputfile")
    parser.add_argument("-s", "--startdate", help="start from future date instead of next week thursday. format: YYYY/MM/DD (and whatever dateutil.parser.parse feeds on)", type=dateutil.parser.parse)
    parser.add_argument("--skiprange", help="skipranges for dates. something like 2019/06/01-2019/07/30 can be set multiple times. if only one day is given only that day is skipped", nargs='*', type=parse_skiprange)
-   args = parser.parse_args()
+   return parser
 
+def get_csv(args):
+   """
+   do our thing, read the file and write out lines of csv
+   """
+   output = io.StringIO()
    # fields required by google https://support.google.com/calendar/answer/37118?hl=en#
    fieldnames = ['Subject', 'Start Date', 'Start Time', 'End Date', 'End Time', 'All Day Event', 'Description', 'Location', 'Private']
-   writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
+   writer = csv.DictWriter(output, fieldnames=fieldnames)
 
    # start from startdate or today
    day = args.startdate if args.startdate else dt.date.today()
@@ -97,6 +106,12 @@ def main(argv):
          # next line please
          line = f.readline()
 
+   return output.getvalue()
+
+def main(argv):
+   parser = get_parser()
+   args = parser.parse_args()
+   print(get_csv(args), end='')
 
 if __name__ == "__main__":
    main(sys.argv[1:])
