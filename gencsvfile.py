@@ -98,7 +98,7 @@ def get_csv(args):
             'End Date': day.strftime(fmt),
             'End Time': '8:00 PM',
             'All Day Event': 'False',
-            'Description': 'Workshop aiheella: {}'.format(subject),
+            'Description': 'Teematorstai aiheella: {}'.format(subject),
             'Location': 'Tampere Hacklab, Ahlmanintie, Tampere',
             'Private': 'False',
          })
