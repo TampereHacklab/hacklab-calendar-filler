@@ -1,13 +1,16 @@
-Puutyöt
-Fusion 360
+Tutustuminen puutyötilaan
+Tutustuminen metallityötilaan
+Tutustuminen elektroniikkatyötilaan
+Tutustuminen maalaamoon
+Tutustuminen tekstiilityötilaan
+Inkscape
+Laserleikkaus
+3D-mallinnus Fusion 360 osa 1 CAD
+3D-tulostus
+3D-mallinnus Fusion 360 osa 2 CAM
+Plasmaleikkaus
 Iso CNC
-Plasma
-Metallivalu
-Sorvaus metalli
-Sorvaus puu
-Tekstiilityöt yleisesti
-Laser
-Radioamatöörihommat
+Github
+Elektroniikan perusteet
 Python
 Arduino
-Musiikin tuottaminen
